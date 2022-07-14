@@ -5,7 +5,9 @@
       <h1>{{ error }}</h1>
     </div>
     <div v-else>
-      <router-link to="/">Back</router-link>
+      <div class="back-link">
+        <router-link to="/">Go back</router-link>
+      </div>
       <ImageDetails :coco_url="details.coco_url" :file_name="details.file_name" :date="details.date"
         :width="details.width" :height="details.height" :objects="details.objects" />
     </div>
@@ -46,3 +48,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.back-link {
+  margin-bottom: 1rem;
+}
+</style>

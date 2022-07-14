@@ -49,7 +49,7 @@ export default {
       return this.images;
     },
   },
-  async created() {
+  created() {
     this.fetchImages();
   },
   methods: {

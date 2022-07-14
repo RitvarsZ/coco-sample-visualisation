@@ -3,7 +3,7 @@
     <svg :viewBox="`0 0 ${width} ${height}`">
       <image :href="coco_url" :width="width" :height="height" />
         <ImagePolygon v-for="object, index in objects" :key="index + '-' + object.name"
-          :points="object.mask" :name="object.name" :hidden="shouldHidePoly(object)" />
+          :points="object.mask" :name="object.name" :hidden="shouldHidePolygon(object)" />
     </svg>
 
     <div class="details-meta">
@@ -32,6 +32,7 @@ import ImagePolygon from './ImagePolygon.vue';
 
 export default {
   name: 'ImageDetails',
+  components: { ImagePolygon },
   props: {
     coco_url: {
       type: String,
@@ -63,9 +64,8 @@ export default {
       highlightedObject: null,
     };
   },
-  components: { ImagePolygon },
   methods: {
-    shouldHidePoly(object) {
+    shouldHidePolygon(object) {
       return this.highlightedObject && this.highlightedObject !== object;
     },
   },
