@@ -5,14 +5,20 @@
       <h1>{{ error }}</h1>
     </div>
     <div v-else>
-      Details
+      <router-link to="/">Back</router-link>
+      <ImageDetails :coco_url="details.coco_url" :file_name="details.file_name" :date="details.date"
+        :width="details.width" :height="details.height" :objects="details.objects" />
     </div>
   </div>
 </template>
 <script>
 import { getImageById } from '@/data/dataHelper';
+import ImageDetails from '@/components/ImageDetails.vue';
 
 export default {
+  components: {
+    ImageDetails,
+  },
   data() {
     return {
       loading: true,
