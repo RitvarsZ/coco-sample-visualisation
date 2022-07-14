@@ -8,21 +8,20 @@
 
     <div class="details-meta">
       <div>
-        <h1>Image data</h1>
-        <p>File name: {{ file_name }}</p>
+        <h1>{{ file_name }}</h1>
         <p>Date: {{ date }}</p>
         <p>Dimensions: {{ width }}x{{ height }}</p>
       </div>
 
       <div>
         <h2>Objects</h2>
-        <ul>
-          <li v-for="object, index in objects" :key="index + '-' + object.name"
+        <div class="object-list">
+          <span v-for="object, index in objects" :key="index + '-' + object.name"
             @mouseover="highlightedObject = object"
             @mouseleave="highlightedObject = null">
-            <p>Name: {{ object.name }}</p>
-          </li>
-        </ul>
+            <p>{{ object.name }}</p>
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -87,21 +86,21 @@ export default {
   flex-direction: row;
   margin-top: 1rem;
   width: 100%;
-  justify-content: space-evenly;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 2rem;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
+.object-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
-ul li {
+.object-list span {
   padding: .8rem;
 }
 
-ul li:hover {
+.object-list span:hover {
   background-color: #f5f5f5;
   cursor: pointer;
 }
