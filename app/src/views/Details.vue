@@ -12,7 +12,7 @@
   </div>
 </template>
 <script>
-import { getImageById } from '@/data/dataHelper';
+import { getImageById } from '@/data/api';
 import ImageDetails from '@/components/ImageDetails.vue';
 
 export default {
@@ -34,15 +34,14 @@ export default {
       this.loading = true;
       this.details = null;
       this.error = null;
-      const image = getImageById(this.$route.params.id);
 
-      if (image) {
-        this.details = image;
-      } else {
-        this.error = 'Not found.';
-      }
-
-      this.loading = false;
+      getImageById(this.$route.params.id).then((res) => {
+        this.details = res;
+      }).catch((err) => {
+        this.error = err;
+      }).finally(() => {
+        this.loading = false;
+      });
     },
   },
 };

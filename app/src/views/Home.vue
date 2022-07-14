@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div v-if="loading">Loading</div>
+  <div v-else>
     <div class="filters">
       <button @click="filters.date.enabled = !filters.date.enabled">
         {{ filters.date.enabled ? 'Show' : 'Hide' }}
@@ -7,7 +8,11 @@
         {{ filters.date.before.toDateString() }}
       </button>
     </div>
-    <div class="card-grid">
+    <div v-if="error">
+      <h1>{{ error }}</h1>
+    </div>
+
+    <div v-if="images.length" class="card-grid">
       <Card v-for="image in filteredImages" :key="image.id" :imgSrc="image.coco_url"
         :title="image.file_name" :description="getObjectString(image.objects)" :id="image.id" />
     </div>
@@ -15,20 +20,23 @@
 </template>
 
 <script>
-import { getAllImages } from '@/data/dataHelper';
+import { getAllImages } from '@/data/api';
 import Card from '@/components/Card.vue';
 
 export default {
   components: {
     Card,
   },
+  name: 'Home',
   data() {
     return {
+      loading: false,
+      error: null,
       images: [],
       filters: {
         date: {
           before: new Date('2013-11-18'),
-          enabled: true,
+          enabled: false,
         },
       },
     };
@@ -41,10 +49,23 @@ export default {
       return this.images;
     },
   },
-  created() {
-    this.images = getAllImages();
+  async created() {
+    this.fetchImages();
   },
   methods: {
+    fetchImages() {
+      this.loading = true;
+      this.error = null;
+
+      getAllImages().then((res) => {
+        this.images = res.data;
+      }).catch((err) => {
+        this.error = err;
+      }).finally(() => {
+        this.loading = false;
+      });
+    },
+
     getObjectString(objects) {
       let string = '';
       objects.forEach((object) => { string += `${object.name}, `; });
