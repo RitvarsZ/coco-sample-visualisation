@@ -1,10 +1,16 @@
 <template>
-  <div class="card-grid">
-    <Card v-for="image in images" :key="image.id"
-      :imgSrc="image.coco_url"
-      :title="image.file_name"
-      :description="getObjectString(image.objects)"
-      :id="image.id"/>
+  <div>
+    <div class="filters">
+      <button @click="filters.date.enabled = !filters.date.enabled">
+        {{ filters.date.enabled ? 'Show' : 'Hide' }}
+        images before
+        {{ filters.date.before.toDateString() }}
+      </button>
+    </div>
+    <div class="card-grid">
+      <Card v-for="image in filteredImages" :key="image.id" :imgSrc="image.coco_url"
+        :title="image.file_name" :description="getObjectString(image.objects)" :id="image.id" />
+    </div>
   </div>
 </template>
 
@@ -19,7 +25,21 @@ export default {
   data() {
     return {
       images: [],
+      filters: {
+        date: {
+          before: new Date('2013-11-18'),
+          enabled: true,
+        },
+      },
     };
+  },
+  computed: {
+    filteredImages() {
+      if (this.filters.date.enabled) {
+        return this.images.filter((image) => new Date(image.date) < this.filters.date.before);
+      }
+      return this.images;
+    },
   },
   created() {
     this.images = getAllImages();
@@ -38,6 +58,12 @@ export default {
 </script>
 
 <style scoped>
+.filters {
+  background-color: #fff;
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+
 .card-grid {
   display: flex;
   flex-direction: row;
