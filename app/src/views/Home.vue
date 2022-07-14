@@ -13,7 +13,7 @@ export default {
       images: [],
     };
   },
-  mounted() {
+  created() {
     this.images = getAllImages();
   },
 };

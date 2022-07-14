@@ -1,9 +1,12 @@
 <template>
-  <div v-if="error">
-    <h1>{{ error }}</h1>
-  </div>
+  <div v-if="loading">Loading</div>
   <div v-else>
-    Details
+    <div v-if="error">
+      <h1>{{ error }}</h1>
+    </div>
+    <div v-else>
+      Details
+    </div>
   </div>
 </template>
 <script>
@@ -12,29 +15,28 @@ import { getImageById } from '@/data/dataHelper';
 export default {
   data() {
     return {
+      loading: true,
       details: null,
       error: null,
     };
   },
-  beforeRouteEnter(to, from, next) {
-    getImageById(to.params.id, (err, details) => {
-      next((vm) => vm.setData(err, details));
-    });
-  },
-  beforeRouteUpdate(to, from, next) {
-    this.details = null;
-    getImageById(to.params.id, (err, details) => {
-      this.setData(err, details);
-      next();
-    });
+  created() {
+    this.fetchData();
   },
   methods: {
-    setData(err, details) {
-      if (err) {
-        this.error = err;
+    fetchData() {
+      this.loading = true;
+      this.details = null;
+      this.error = null;
+      const image = getImageById(this.$route.params.id);
+
+      if (image) {
+        this.details = image;
       } else {
-        this.details = details;
+        this.error = 'Not found.';
       }
+
+      this.loading = false;
     },
   },
 };
